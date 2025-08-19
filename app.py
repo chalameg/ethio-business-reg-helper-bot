@@ -11,10 +11,10 @@ from helpers.memory import get_memory_from_session, add_to_memory, clear_memory,
 
 
 # Configure Streamlit page
-st.set_page_config(page_title="Ethiopian Startup & Business Registration Helper", layout="wide")
+st.set_page_config(page_title="Ethio Startup Advisor", layout="wide")
 
 # Main Title
-st.title("🇪🇹 Ethiopian Startup & Business Registration Helper 💬")
+st.title("🇪🇹 Ethio Startup Advisor 💼")
 
 # Load environment variables (for GROQ API key, etc.)
 load_dotenv()
@@ -95,7 +95,7 @@ if not st.session_state.docs_processed:
 
 # --- Sidebar Setup ---
 with st.sidebar:
-    st.header("📂 Knowledge Base Management")
+    st.header("📂 Ethio Startup Advisor")
     
     # Show current status
     if st.session_state.docs_processed:
@@ -194,16 +194,16 @@ with st.sidebar:
                     st.error(f"Error: {e}")
 
 # --- Main Q&A Area ---
-st.header("💬 Ask About Ethiopian Startup & Business Registration")
+st.header("💬 Ask Your Startup Questions")
 
 if st.session_state.rag_chain:
-    st.success("🚀 **Ready to Answer Questions!**")
-    st.info("Ask me anything about Ethiopian business registration, startup ecosystem, or tax compliance.")
+    st.success("🚀 **Ready to Advise!**")
+    st.info("Ask me anything about Ethiopian startups, business registration, or entrepreneurship.")
     
-    question = st.text_input("💭 Enter your question:", placeholder="e.g., What are the requirements for registering a private limited company?")
+    question = st.text_input("💭 Ask your startup question:", placeholder="e.g., How do I register my startup in Ethiopia?")
     
     if question:
-        with st.spinner("🤔 Searching through Ethiopian business documents..."):
+        with st.spinner("🤔 Searching through startup resources..."):
             try:
                 answer = st.session_state.rag_chain.invoke(question)
                 
@@ -215,15 +215,15 @@ if st.session_state.rag_chain:
                 st.markdown(answer)
                 
                 # Add a helpful tip
-                st.info("💡 **Tip:** You can ask follow-up questions or request more specific information about any topic.")
+                st.info("💡 **Tip:** Ask follow-up questions about your startup journey in Ethiopia!")
                 
             except Exception as e:
                 st.error(f"❌ Error processing your question: {e}")
                 st.info("Please try rephrasing your question or check if the knowledge base is properly loaded.")
 
 else:
-    st.warning("⚠️ **Knowledge Base Not Ready**")
-    st.info("Please process your documents first using the sidebar. Once processed, you'll be able to ask questions about Ethiopian business topics.")
+    st.warning("⚠️ **Startup Advisor Not Ready**")
+    st.info("Please load your startup resources first using the sidebar. Once loaded, I'll be ready to advise you on Ethiopian entrepreneurship.")
     
     # Show what documents are available
     import os

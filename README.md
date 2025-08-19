@@ -1,6 +1,6 @@
-# 🇪🇹 Ethiopian Startup & Business Registration Helper
+# 🇪🇹 Ethio Startup Advisor
 
-A Streamlit-based RAG (Retrieval-Augmented Generation) application that helps entrepreneurs and businesses understand Ethiopian business registration, startup ecosystem, and tax compliance requirements using AI-powered question answering.
+A Streamlit-based RAG (Retrieval-Augmented Generation) application that provides AI-powered guidance for Ethiopian entrepreneurs and startups on business registration, ecosystem insights, and compliance requirements.
 
 ## 🚀 Features
 
@@ -106,7 +106,7 @@ The application uses:
 ## 📁 Project Structure
 
 ```
-startup-bot/
+ethio-startup-advisor/
 ├── app.py                 # Main Streamlit application
 ├── requirements.txt       # Python dependencies
 ├── .env                  # Environment variables (create this)
