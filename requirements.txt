@@ -8,3 +8,4 @@ chromadb
 langchain-chroma
 langchain-text-splitters
 langchain-huggingface
+langchain

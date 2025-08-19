@@ -30,13 +30,13 @@ def create_rag_chain(retriever: ContextualCompressionRetriever):
     # 1. Initialize Groq LLM (Llama-3 is super fast here)
     llm = ChatGroq(
         temperature=0,   # deterministic answers
-        model_name="llama3-8b-8192"  # Groq’s recommended fast model
+        model_name="llama3-8b-8192"  # Groq's recommended fast model
     )
 
     # 2. Define the system prompt
     prompt_template = """
     You are an assistant specialized in Ethiopian startup and business registration law.
-    Use ONLY the following context to answer the user’s question.
+    Use ONLY the following context to answer the user's question.
     If the answer is not in the context, say:
     "The answer is not available in the provided documents."
 
@@ -48,6 +48,7 @@ def create_rag_chain(retriever: ContextualCompressionRetriever):
 
     Answer:
     """
+
     prompt = ChatPromptTemplate.from_template(prompt_template)
 
     # 3. Define the chain
