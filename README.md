@@ -1,15 +1,15 @@
 # 🇪🇹 Ethio Startup Advisor
 
-A Streamlit-based RAG (Retrieval-Augmented Generation) application that provides AI-powered guidance for Ethiopian entrepreneurs and startups on business registration, ecosystem insights, and compliance requirements.
+A Streamlit-based RAG (Retrieval-Augmented Generation) application that provides instant, accurate answers about Ethiopian business law directly from official government proclamations and legal codes. Perfect for entrepreneurs, startup founders, and small business owners who need reliable guidance on business registration, licensing, and compliance.
 
 ## 🚀 Features
 
-- **Document Processing**: Load and process PDF documents from a local data folder
-- **AI-Powered Q&A**: Get instant answers about Ethiopian business law and regulations
-- **Vector Search**: Advanced document retrieval using Chroma vector database
-- **Cross-Encoder Reranking**: Enhanced search quality with HuggingFace cross-encoder models
-- **Streamlit UI**: Clean, intuitive web interface for easy interaction
-- **GROQ Integration**: Fast LLM responses using Groq's Llama-3 model
+- **Official Legal Sources**: Based on Ethiopian Commercial Code, Investment Proclamations, and Trade Regulations
+- **AI-Powered Legal Guidance**: Get instant answers about Ethiopian business law and regulations
+- **Startup-Focused**: Tailored for entrepreneurs, startup founders, and small business owners
+- **Comprehensive Coverage**: Business registration, licensing, foreign investment, and tax compliance
+- **Fast & Accurate**: Powered by GROQ's Llama-3 model for reliable responses
+- **User-Friendly**: Clean Streamlit interface with common question examples
 
 ## 🏗️ Architecture
 

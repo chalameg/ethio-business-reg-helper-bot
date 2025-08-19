@@ -16,6 +16,14 @@ st.set_page_config(page_title="Ethio Startup Advisor", layout="wide")
 # Main Title
 st.title("🇪🇹 Ethio Startup Advisor 💼")
 
+# App Description
+st.markdown("""
+<div style='text-align: center; padding: 20px; background-color: #1f77b4; border-radius: 10px; margin: 15px 0; color: white;'>
+    <h4 style='color: white; margin-bottom: 10px;'>🚀 Get instant, accurate answers about Ethiopian business registration, licensing, and investment rules</h4>
+    <p style='color: white; font-size: 16px; margin: 0;'><strong>Directly from official government proclamations and legal codes</strong></p>
+</div>
+""", unsafe_allow_html=True)
+
 # Load environment variables (for GROQ API key, etc.)
 load_dotenv()
 
@@ -34,10 +42,6 @@ from helpers.memory import create_conversation_memory
 if "conversation_memory" not in st.session_state:
     st.session_state.conversation_memory = create_conversation_memory()
 
-# Show app initialization status
-if not st.session_state.docs_processed:
-    st.info("🚀 **Initializing Application...** Please wait while we set up your knowledge base.")
-
 # Auto-load existing processed documents on startup
 if not st.session_state.docs_processed:
     # Show loading state at the top of the app
@@ -52,13 +56,6 @@ if not st.session_state.docs_processed:
         status_text.text("📚 Step 1: Loading vector database...")
         progress_bar.progress(25)
         from helpers.vectorstore import load_vectorstore
-        
-        # Check if startup_db directory exists
-        import os
-        if os.path.exists("./startup_db"):
-            st.info(f"📁 Found startup_db directory with {len(os.listdir('./startup_db'))} files")
-        else:
-            st.info("📁 No startup_db directory found")
         
         existing_vectorstore = load_vectorstore("./startup_db")
         
@@ -99,8 +96,18 @@ with st.sidebar:
     
     # Show current status
     if st.session_state.docs_processed:
-        st.success("✅ Knowledge Base Ready")
-        st.info("You can now ask questions!")
+        st.success("✅ Legal Advisor Ready")
+        st.info("Ask questions about Ethiopian business law!")
+        
+        # Data Sources Info
+        st.markdown("---")
+        st.markdown("### 📚 **Legal Sources:**")
+        st.info("""
+        • Ethiopian Commercial Code (2021)
+        • Investment Proclamation No. 1180/2020
+        • Trade Registration Proclamation No. 980/2016
+        • Tax Proclamations
+        """)
         
         # Memory management section
         st.subheader("🧠 Conversation Memory")
@@ -200,10 +207,37 @@ if st.session_state.rag_chain:
     st.success("🚀 **Ready to Advise!**")
     st.info("Ask me anything about Ethiopian startups, business registration, or entrepreneurship.")
     
-    question = st.text_input("💭 Ask your startup question:", placeholder="e.g., How do I register my startup in Ethiopia?")
+    # Common Questions Section
+    st.markdown("### 🔍 **Common Questions You Can Ask:**")
+    col1, col2 = st.columns(2)
+    
+    with col1:
+        st.markdown("""
+        **🏢 Business Registration:**
+        • How do I register a private limited company?
+        • What's the minimum capital requirement?
+        • What documents do I need?
+        
+        **📋 Licensing & Permits:**
+        • How do I get a trade license?
+        """)
+    
+    with col2:
+        st.markdown("""
+        **🌍 Foreign Investment:**
+        • What are the foreign investment rules?
+        • Can foreigners own 100% of a company?
+        • What sectors are open to foreigners?
+        
+        **💰 Tax & Compliance:**
+        • What are the tax obligations for startups?
+        • When do I need to register for VAT?
+        """)
+    
+    question = st.text_input("💭 Ask your startup question:", placeholder="e.g., What's the minimum capital for a private limited company?")
     
     if question:
-        with st.spinner("🤔 Searching through startup resources..."):
+        with st.spinner("🤔 Searching through official Ethiopian legal documents..."):
             try:
                 answer = st.session_state.rag_chain.invoke(question)
                 
@@ -222,14 +256,14 @@ if st.session_state.rag_chain:
                 st.info("Please try rephrasing your question or check if the knowledge base is properly loaded.")
 
 else:
-    st.warning("⚠️ **Startup Advisor Not Ready**")
-    st.info("Please load your startup resources first using the sidebar. Once loaded, I'll be ready to advise you on Ethiopian entrepreneurship.")
+    st.warning("⚠️ **Legal Advisor Not Ready**")
+    st.info("Please load your Ethiopian legal documents first using the sidebar. Once loaded, I'll be ready to advise you on business registration and compliance.")
     
     # Show what documents are available
     import os
     if os.path.exists("./data") and os.listdir("./data"):
-        st.success(f"📁 Found {len(os.listdir('./data'))} document(s) in the data folder")
+        st.success(f"📁 Found {len(os.listdir('./data'))} legal document(s) in the data folder")
         st.info("Click '📚 Process Documents' in the sidebar to get started!")
     else:
-        st.error("📁 No documents found in the data folder")
-        st.info("Please add PDF documents to the ./data folder and then process them.")
+        st.error("📁 No legal documents found in the data folder")
+        st.info("Please add Ethiopian legal documents (Commercial Code, Proclamations) to the ./data folder and then process them.")
