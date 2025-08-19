@@ -1,16 +1,21 @@
-from langchain.vectorstores import Chroma
-from langchain.embeddings import HuggingFaceEmbeddings
+# helpers/vectorstore.py
+
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
+import os
+import pickle
+
 
 def create_or_load_vectorstore(chunks, persist_directory="./startup_db"):
     """
-    Creates a new vectorstore or loads existing one.
+    Creates a new vectorstore or loads existing one using FAISS.
     
     Args:
         chunks: Document chunks to embed
         persist_directory (str): Directory to persist vectorstore
         
     Returns:
-        Chroma: Vectorstore instance
+        FAISS: Vectorstore instance
     """
     import os
     
@@ -27,17 +32,30 @@ def create_or_load_vectorstore(chunks, persist_directory="./startup_db"):
         model_kwargs={'device': 'cpu'} # Use CPU. You can change to 'cuda' if you have a GPU.
     )
     
-    vectordb = Chroma.from_documents(
+    vectordb = FAISS.from_documents(
         documents=chunks,
-        embedding=embeddings,
-        persist_directory=persist_directory
+        embedding=embeddings
     )
     
-    # Ensure the vectorstore is persisted
-    vectordb.persist()
-    print(f"💾 Vectorstore persisted to {persist_directory}")
+    # Ensure the directory exists
+    os.makedirs(persist_directory, exist_ok=True)
+    
+    # Save the vectorstore
+    save_path = os.path.join(persist_directory, "faiss_index")
+    vectordb.save_local(save_path)
+    
+    # Save metadata about the documents
+    metadata_path = os.path.join(persist_directory, "metadata.pkl")
+    with open(metadata_path, 'wb') as f:
+        pickle.dump({
+            'document_count': len(chunks),
+            'chunk_size': len(chunks[0].page_content) if chunks else 0
+        }, f)
+    
+    print(f"💾 Vectorstore saved to {save_path}")
     
     return vectordb
+
 
 def load_vectorstore(persist_directory="./startup_db"):
     """
@@ -47,23 +65,19 @@ def load_vectorstore(persist_directory="./startup_db"):
         persist_directory (str): Directory where vectorstore is stored
         
     Returns:
-        Chroma: Vectorstore instance or None if not found
+        FAISS: Vectorstore instance or None if not found
     """
     import os
     
-    # Check if the directory exists and has vectorstore files
+    # Check if the directory exists
     if not os.path.exists(persist_directory):
         return None
     
-    # Check if there are actual vectorstore files (not just empty directory)
-    vectorstore_files = [
-        "chroma.sqlite3",
-        "chroma.sqlite3-shm", 
-        "chroma.sqlite3-wal"
-    ]
+    # Check if there are actual vectorstore files
+    faiss_index_path = os.path.join(persist_directory, "faiss_index")
+    metadata_path = os.path.join(persist_directory, "metadata.pkl")
     
-    has_files = any(os.path.exists(os.path.join(persist_directory, f)) for f in vectorstore_files)
-    if not has_files:
+    if not os.path.exists(faiss_index_path) or not os.path.exists(metadata_path):
         return None
     
     try:
@@ -73,15 +87,14 @@ def load_vectorstore(persist_directory="./startup_db"):
         )
         
         # Try to load the existing vectorstore
-        vectorstore = Chroma(
-            persist_directory=persist_directory, 
-            embedding_function=embeddings
-        )
+        vectorstore = FAISS.load_local(faiss_index_path, embeddings)
         
         # Verify it has documents
-        if vectorstore and hasattr(vectorstore, '_collection') and vectorstore._collection.count() > 0:
+        if vectorstore and hasattr(vectorstore, 'index') and vectorstore.index.ntotal > 0:
+            print(f"✅ Loaded FAISS vectorstore with {vectorstore.index.ntotal} vectors")
             return vectorstore
         else:
+            print("❌ Vectorstore has no documents")
             return None
             
     except Exception as e:
