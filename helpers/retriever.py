@@ -1,11 +1,11 @@
 from langchain.retrievers import ContextualCompressionRetriever
 from langchain.retrievers.document_compressors import CrossEncoderReranker
 from langchain_community.cross_encoders import HuggingFaceCrossEncoder
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 
 
 def create_retriever(
-    vectorstore: Chroma, 
+    vectorstore: FAISS, 
     search_k: int = 10, 
     reranker_top_n: int = 3, 
     model_name: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
@@ -14,7 +14,7 @@ def create_retriever(
     Create a retriever with cross-encoder reranking for higher-quality search.
 
     Args:
-        vectorstore (Chroma): The Chroma vectorstore instance.
+        vectorstore (FAISS): The FAISS vectorstore instance.
         search_k (int): Number of candidates to fetch from vectorstore.
         reranker_top_n (int): Number of top documents to keep after reranking.
         model_name (str): HuggingFace cross-encoder model for reranking.
@@ -23,7 +23,7 @@ def create_retriever(
         ContextualCompressionRetriever: Enhanced retriever with reranking.
     """
     
-    # 1. Base retriever (dense retrieval from Chroma)
+    # 1. Base retriever (dense retrieval from FAISS)
     base_retriever = vectorstore.as_retriever(search_kwargs={"k": search_k})
 
     # 2. Load HuggingFace cross-encoder for reranking
