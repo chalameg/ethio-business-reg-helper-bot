@@ -1,188 +1,178 @@
 # 🇪🇹 Ethio Startup Advisor
 
-A Streamlit-based RAG (Retrieval-Augmented Generation) application that provides instant, accurate answers about Ethiopian business law directly from official government proclamations and legal codes. Perfect for entrepreneurs, startup founders, and small business owners who need reliable guidance on business registration, licensing, and compliance.
+> **AI-powered Ethiopian business law advisor with dual architecture support**
 
-## 🚀 Features
+This project provides an intelligent assistant for Ethiopian entrepreneurs, offering guidance on business registration, licensing, and investment rules. Built with RAG (Retrieval-Augmented Generation) technology, it draws from official government proclamations and legal codes.
 
-- **Official Legal Sources**: Based on Ethiopian Commercial Code, Investment Proclamations, and Trade Regulations
-- **AI-Powered Legal Guidance**: Get instant answers about Ethiopian business law and regulations
-- **Startup-Focused**: Tailored for entrepreneurs, startup founders, and small business owners
-- **Comprehensive Coverage**: Business registration, licensing, foreign investment, and tax compliance
-- **Fast & Accurate**: Powered by GROQ's Llama-3 model for reliable responses
-- **User-Friendly**: Clean Streamlit interface with common question examples
+## 🏗️ **Project Architecture**
 
-## 🏗️ Architecture
+This project now supports **two different architectures**:
 
-The application uses a modern RAG pipeline:
+### **🚀 Option 1: Streamlit App (Original)**
+- **Single-file application** with integrated UI and AI
+- **Easy deployment** on Streamlit Cloud
+- **Quick setup** for prototyping and testing
+- **File**: `app.py`
 
+### **⚡ Option 2: Next.js + FastAPI (Modern)**
+- **Separated frontend and backend** for scalability
+- **Modern web interface** with responsive design
+- **Professional deployment** options (Vercel, Railway, etc.)
+- **Files**: `frontend/` and `backend/` directories
+
+## 🎯 **Choose Your Setup**
+
+| Feature | Streamlit | Next.js + FastAPI |
+|---------|-----------|-------------------|
+| **Setup Speed** | ⚡ Fast (1 file) | 🚀 Moderate (2 directories) |
+| **UI Quality** | 🟡 Good | 🟢 Excellent |
+| **Mobile Experience** | 🟡 Basic | 🟢 Responsive |
+| **Deployment** | 🟢 Streamlit Cloud | 🟢 Vercel + Railway |
+| **Scalability** | 🟡 Limited | 🟢 High |
+| **Customization** | 🟡 Limited | 🟢 Unlimited |
+
+## 🚀 **Quick Start - Choose Your Path**
+
+### **Path A: Streamlit (Recommended for Quick Start)**
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the app
+streamlit run app.py
 ```
-Documents → Chunking → Vector Embeddings → Chroma DB → Retrieval → Reranking → LLM → Response
+
+### **Path B: Next.js + FastAPI (Recommended for Production)**
+```bash
+# Backend
+cd backend
+pip install -r requirements.txt
+python main.py
+
+# Frontend (in new terminal)
+cd frontend
+npm install
+npm run dev
 ```
 
-### Components
-
-- **`app.py`**: Main Streamlit application and UI
-- **`helpers/chunker.py`**: Document text splitting and chunking
-- **`helpers/loader.py`**: PDF document loading and processing
-- **`helpers/vectorstore.py`**: Chroma vector database management
-- **`helpers/retriever.py`**: Advanced document retrieval with reranking
-- **`helpers/chain.py`**: RAG chain construction and LLM integration
-
-## 📋 Prerequisites
-
-- Python 3.8+
-- GROQ API key (for LLM functionality)
-- PDF documents related to Ethiopian business law
-
-## 🛠️ Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd startup-bot
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Set up environment variables**
-   Create a `.env` file in the project root:
-   ```bash
-   GROQ_API_KEY=your_groq_api_key_here
-   ```
-
-4. **Prepare your documents**
-   Place PDF files related to Ethiopian business law in the `./data` folder.
-
-## 🚀 Usage
-
-1. **Start the application**
-   ```bash
-   streamlit run app.py
-   ```
-
-2. **Load documents**
-   - Click "Process Documents" in the sidebar
-   - Wait for the processing to complete
-   - You'll see a success message when ready
-
-3. **Ask questions**
-   - Type your question about Ethiopian business registration
-   - Get instant AI-powered answers based on your documents
-
-## 📚 Sample Questions
-
-The application can answer questions about:
-
-- **Business Registration**: Types of entities, requirements, process
-- **Startup Ecosystem**: Incubators, funding, government support
-- **Tax Compliance**: Corporate tax, VAT, withholding tax, filing requirements
-- **Legal Requirements**: Permits, licenses, compliance obligations
-- **Investment**: Foreign investment rules, incentives, restrictions
-
-## 🔧 Configuration
-
-### Environment Variables
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `GROQ_API_KEY` | Your GROQ API key for LLM access | Yes |
-
-### Model Configuration
-
-The application uses:
-- **Embeddings**: `sentence-transformers/all-MiniLM-L6-v2`
-- **LLM**: `llama3-8b-8192` (via Groq)
-- **Reranker**: `cross-encoder/ms-marco-MiniLM-L-6-v2`
-
-### Chunking Settings
-
-- **Chunk Size**: 800 characters
-- **Chunk Overlap**: 100 characters
-- **Separators**: Article breaks, newlines, spaces
-
-## 📁 Project Structure
+## 📁 **Project Structure**
 
 ```
 ethio-startup-advisor/
-├── app.py                 # Main Streamlit application
-├── requirements.txt       # Python dependencies
-├── .env                  # Environment variables (create this)
-├── data/                 # PDF documents folder
-├── helpers/              # Core functionality modules
-│   ├── chain.py         # RAG chain construction
-│   ├── chunker.py       # Document chunking
-│   ├── loader.py        # Document loading
-│   ├── retriever.py     # Document retrieval
-│   └── vectorstore.py   # Vector database management
-└── README.md            # This file
+├── 📱 app.py                    # Streamlit app (Option 1)
+├── 🐍 requirements.txt          # Python dependencies
+├── 📚 helpers/                  # AI/RAG components
+│   ├── chain.py                # RAG chain logic
+│   ├── chunker.py              # Document chunking
+│   ├── loader.py               # PDF document loading
+│   ├── memory.py               # Conversation memory
+│   ├── retriever.py            # Document retrieval
+│   └── vectorstore.py          # FAISS vector database
+├── 📁 data/                    # Legal documents (PDFs)
+├── 🆕 backend/                 # FastAPI server (Option 2)
+│   ├── main.py                 # FastAPI application
+│   ├── requirements.txt        # Backend dependencies
+│   └── README.md               # Backend setup guide
+├── 🆕 frontend/                # Next.js app (Option 2)
+│   ├── src/app/                # React components
+│   ├── package.json            # Frontend dependencies
+│   └── README.md               # Frontend setup guide
+├── 📖 README.md                # This file
+└── 🚫 .gitignore               # Git ignore rules
 ```
 
-## 🧪 Testing
+## 🌟 **Key Features**
 
-1. **Add sample documents** to the `./data` folder
-2. **Start the application** with `streamlit run app.py`
-3. **Process documents** using the sidebar button
-4. **Ask test questions** about Ethiopian business topics
+- **🤖 AI-Powered Q&A**: Get instant answers about Ethiopian business law
+- **📚 Legal Source Integration**: Based on official government documents
+- **💬 Conversation Memory**: Context-aware responses
+- **📱 Responsive Design**: Works on desktop, tablet, and mobile
+- **🔍 Smart Document Search**: FAISS-based vector search with reranking
+- **🌍 Ethiopian Focus**: Specialized for Ethiopian business environment
 
-## 🔍 Troubleshooting
+## 🎯 **Target Users**
 
-### Common Issues
+- **Entrepreneurs** starting businesses in Ethiopia
+- **Startup founders** seeking legal guidance
+- **Small business owners** needing compliance information
+- **Foreign investors** exploring Ethiopian opportunities
+- **Legal professionals** requiring quick reference
 
-1. **GROQ API Key Error**
-   - Ensure your `.env` file contains the correct API key
-   - Verify the API key is valid and has sufficient credits
+## 📋 **Supported Topics**
 
-2. **Document Processing Fails**
-   - Check that PDF files are in the `./data` folder
-   - Ensure PDFs are not corrupted or password-protected
-   - Verify all dependencies are installed correctly
+- **🏢 Business Registration**: Private Limited Company, Share Company, Sole Proprietorship
+- **📋 Licensing & Permits**: Trade licenses, business permits
+- **💰 Minimum Capital Requirements**: Financial requirements for different business types
+- **🌍 Foreign Investment Rules**: Investment regulations and restrictions
+- **💸 Tax Obligations**: High-level tax information from proclamations
 
-3. **Vector Database Errors**
-   - Delete the `startup_db` folder if it exists
-   - Restart the application and reprocess documents
+## 🛠️ **Technology Stack**
 
-4. **Memory Issues**
-   - Reduce chunk size in `helpers/chunker.py`
-   - Process fewer documents at once
-   - Use smaller embedding models
+### **AI & RAG Components**
+- **LangChain**: RAG pipeline orchestration
+- **GROQ**: Fast LLM inference (Llama-3 model)
+- **FAISS**: Vector database for document search
+- **HuggingFace**: Document embeddings and reranking
 
-### Performance Optimization
+### **Frontend Options**
+- **Streamlit**: Python-based UI (Option 1)
+- **Next.js**: React-based modern UI (Option 2)
+- **Tailwind CSS**: Utility-first styling (Option 2)
 
-- **Faster Processing**: Use smaller chunk sizes
-- **Better Quality**: Increase chunk overlap
-- **Memory Efficiency**: Process documents in batches
+### **Backend Options**
+- **Streamlit**: Integrated backend (Option 1)
+- **FastAPI**: Modern Python API (Option 2)
 
-## 🤝 Contributing
+## 🚀 **Deployment Options**
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+### **Streamlit App**
+- **Streamlit Cloud**: Free hosting with automatic deployment
+- **Heroku**: Traditional Python hosting
+- **Railway**: Modern Python hosting
 
-## 📄 License
+### **Next.js + FastAPI**
+- **Frontend**: Vercel, Netlify, or any static hosting
+- **Backend**: Railway, Render, or any Python hosting
+- **Database**: FAISS files stored in cloud storage
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+## 🔧 **Environment Setup**
 
-## 🙏 Acknowledgments
+### **Required Environment Variables**
+```bash
+GROQ_API_KEY=your_groq_api_key_here
+```
 
-- **Streamlit** for the web application framework
-- **LangChain** for the RAG pipeline components
-- **Groq** for fast LLM inference
-- **Chroma** for vector database functionality
-- **HuggingFace** for embedding and reranking models
+### **Document Requirements**
+Place your Ethiopian legal documents (PDFs) in the `data/` folder:
+- Ethiopian Commercial Code (2021)
+- Investment Proclamation No. 1180/2020
+- Trade Registration Proclamation No. 980/2016
+- Tax Proclamations
 
-## 📞 Support
+## 📚 **Documentation**
 
-For issues and questions:
-- Check the troubleshooting section above
-- Review the error messages in the Streamlit interface
-- Ensure all dependencies are correctly installed
-- Verify your GROQ API key is valid
+- **[Streamlit App Guide](app.py)**: Single-file application
+- **[Backend API Guide](backend/README.md)**: FastAPI server setup
+- **[Frontend Guide](frontend/README.md)**: Next.js application setup
+
+## 🤝 **Contributing**
+
+1. **Choose your architecture** (Streamlit or Next.js+FastAPI)
+2. **Fork the repository**
+3. **Create a feature branch**
+4. **Make your changes**
+5. **Submit a pull request**
+
+## 📄 **License**
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🆘 **Support**
+
+- **Issues**: Report bugs and feature requests
+- **Discussions**: Ask questions and share ideas
+- **Wiki**: Detailed setup and usage guides
 
 ---
 
-**Note**: This application is designed for educational and informational purposes. Always consult with legal professionals for official business advice regarding Ethiopian business law and regulations.
+**🇪🇹 Empowering Ethiopian entrepreneurs with AI-powered legal guidance**

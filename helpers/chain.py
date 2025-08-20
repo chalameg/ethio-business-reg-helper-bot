@@ -40,6 +40,13 @@ def create_rag_chain(retriever: ContextualCompressionRetriever):
     If the answer is not in the context, say:
     "The answer is not available in the provided documents."
 
+    IMPORTANT: Format your response in a clear, structured way:
+    - Use bullet points (•) for lists
+    - Use bold text (**text**) for important information
+    - Use clear headings when appropriate
+    - Break down complex processes into numbered steps
+    - Make the response easy to read and understand
+
     Context:
     {context}
 

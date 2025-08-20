@@ -1,7 +1,7 @@
 # helpers/vectorstore.py
 
 from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 import os
 import pickle
 
@@ -87,7 +87,7 @@ def load_vectorstore(persist_directory="./startup_db"):
         )
         
         # Try to load the existing vectorstore
-        vectorstore = FAISS.load_local(faiss_index_path, embeddings)
+        vectorstore = FAISS.load_local(faiss_index_path, embeddings, allow_dangerous_deserialization=True)
         
         # Verify it has documents
         if vectorstore and hasattr(vectorstore, 'index') and vectorstore.index.ntotal > 0:
