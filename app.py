@@ -114,33 +114,6 @@ with st.sidebar:
         memory_summary = get_memory_summary()
         st.info(memory_summary)
         
-        # Debug section
-        st.subheader("🔍 Debug Info")
-        if st.button("🔍 Check Vectorstore Status"):
-            import os
-            if os.path.exists("./startup_db"):
-                files = os.listdir("./startup_db")
-                st.info(f"📁 startup_db directory contains: {files}")
-                
-                # Check for FAISS files
-                faiss_files = [f for f in files if f.startswith("faiss_index") or f.endswith(".pkl")]
-                if faiss_files:
-                    st.success(f"✅ Found FAISS vectorstore files: {faiss_files}")
-                else:
-                    st.warning("⚠️ No FAISS vectorstore files found")
-                
-                # Check if vectorstore has documents
-                if st.session_state.vector_store and hasattr(st.session_state.vector_store, 'index'):
-                    try:
-                        doc_count = st.session_state.vector_store.index.ntotal
-                        st.success(f"✅ Vectorstore has {doc_count} documents")
-                    except Exception as e:
-                        st.error(f"❌ Error checking document count: {e}")
-                else:
-                    st.warning("⚠️ No vectorstore loaded")
-            else:
-                st.error("❌ startup_db directory not found")
-        
         if st.button("🗑️ Clear Memory"):
             clear_memory()
             st.success("Conversation memory cleared!")
