@@ -14,12 +14,12 @@ from helpers.memory import get_memory_from_session, add_to_memory, clear_memory,
 st.set_page_config(page_title="Ethio Startup Advisor", layout="wide")
 
 # Main Title
-st.title("🇪🇹 Ethio Startup Advisor 💼")
+st.title("Ethio Startup Advisor")
 
 # App Description
 st.markdown("""
 <div style='text-align: center; padding: 20px; background-color: #1f77b4; border-radius: 10px; margin: 15px 0; color: white;'>
-    <h4 style='color: white; margin-bottom: 10px;'>🚀 Get instant, accurate answers about Ethiopian business registration, licensing, and investment rules</h4>
+    <h4 style='color: white; margin-bottom: 10px;'> Get instant, accurate answers about Ethiopian business registration, licensing, and investment rules</h4>
     <p style='color: white; font-size: 16px; margin: 0;'><strong>Directly from official government proclamations and legal codes</strong></p>
 </div>
 """, unsafe_allow_html=True)
@@ -45,7 +45,7 @@ if "conversation_memory" not in st.session_state:
 # Auto-load existing processed documents on startup
 if not st.session_state.docs_processed:
     # Show loading state at the top of the app
-    st.info("🚀 **Initializing Application...** Please wait while we set up your knowledge base.")
+    st.info("**Initializing Application...** Please wait while we set up your knowledge base.")
     
     # Create a progress bar
     progress_bar = st.progress(0)
@@ -53,7 +53,7 @@ if not st.session_state.docs_processed:
     
     try:
         # Step 1: Load vector store
-        status_text.text("📚 Step 1: Loading vector database...")
+        status_text.text("Step 1: Loading vector database...")
         progress_bar.progress(25)
         from helpers.vectorstore import load_vectorstore
         
@@ -61,47 +61,47 @@ if not st.session_state.docs_processed:
         
         if existing_vectorstore:
             # Step 2: Create retriever
-            status_text.text("🔍 Step 2: Setting up document retriever...")
+            status_text.text("Step 2: Setting up document retriever...")
             progress_bar.progress(50)
             st.session_state.vector_store = existing_vectorstore
             st.session_state.retriever = create_retriever(existing_vectorstore)
             
             # Step 3: Create RAG chain
-            status_text.text("🤖 Step 3: Initializing AI chat system...")
+            status_text.text("Step 3: Initializing AI chat system...")
             progress_bar.progress(75)
             st.session_state.rag_chain = create_rag_chain(st.session_state.retriever)
             st.session_state.docs_processed = True
             
             # Complete
             progress_bar.progress(100)
-            status_text.text("✅ Ready!")
-            st.success("🎉 **Knowledge base loaded automatically!** You can now start asking questions.")
+            status_text.text("Ready!")
+            st.success("**Knowledge base loaded automatically!** You can now start asking questions.")
             st.balloons()  # Celebrate successful auto-load
             
             # Clear the progress indicators
             progress_bar.empty()
             status_text.empty()
         else:
-            st.info("ℹ️ No existing knowledge base found. Please process documents to get started.")
+            st.info("ℹNo existing knowledge base found. Please process documents to get started.")
             progress_bar.empty()
             status_text.empty()
     except Exception as e:
-        st.info("ℹ️ No existing knowledge base found. Please process documents to get started.")
+        st.info("No existing knowledge base found. Please process documents to get started.")
         progress_bar.empty()
         status_text.empty()
 
 # --- Sidebar Setup ---
 with st.sidebar:
-    st.header("📂 Ethio Startup Advisor")
+    st.header("Ethio Startup Advisor")
     
     # Show current status
     if st.session_state.docs_processed:
-        st.success("✅ Legal Advisor Ready")
+        st.success("Legal Advisor Ready")
         st.info("Ask questions about Ethiopian business law!")
         
         # Data Sources Info
         st.markdown("---")
-        st.markdown("### 📚 **Legal Sources:**")
+        st.markdown("### **Legal Sources:**")
         st.info("""
         • Ethiopian Commercial Code (2021)
         • Investment Proclamation No. 1180/2020
@@ -110,11 +110,11 @@ with st.sidebar:
         """)
         
         # Memory management section
-        st.subheader("🧠 Conversation Memory")
+        st.subheader("Conversation Memory")
         memory_summary = get_memory_summary()
         st.info(memory_summary)
         
-        if st.button("🗑️ Clear Memory"):
+        if st.button("Clear Memory"):
             clear_memory()
             st.success("Conversation memory cleared!")
             st.rerun()
@@ -122,7 +122,7 @@ with st.sidebar:
         # Show recent conversation history
         conversation_history = get_conversation_history()
         if conversation_history:
-            st.subheader("💬 Recent Conversation")
+            st.subheader("Recent Conversation")
             for i, message in enumerate(conversation_history[-6:]):  # Show last 6 messages
                 if hasattr(message, 'content'):
                     if hasattr(message, 'type') and message.type == 'human':
@@ -133,10 +133,10 @@ with st.sidebar:
         
         st.markdown("---")
         
-        if st.button("🔄 Reprocess Documents"):
+        if st.button("Reprocess Documents"):
             with st.spinner("Reloading and reindexing documents..."):
                 try:
-                    # ✅ Load startup/business docs from ./data folder
+                    # Load startup/business docs from ./data folder
                     docs = load_documents("./data")  
                     chunks = chunk_documents(docs)
                     vector_store = create_or_load_vectorstore(chunks)
@@ -147,17 +147,17 @@ with st.sidebar:
                     st.session_state.rag_chain = create_rag_chain(st.session_state.retriever)
                     st.session_state.docs_processed = True
 
-                    st.success("Documents reprocessed successfully ✅")
+                    st.success("Documents reprocessed successfully")
                     st.rerun()
                 except Exception as e:
                     st.error(f"Error: {e}")
     else:
         st.info("No knowledge base found. Process documents to get started.")
         
-        if st.button("📚 Process Documents"):
+        if st.button("Process Documents"):
             with st.spinner("Loading and indexing documents..."):
                 try:
-                    # ✅ Load startup/business docs from ./data folder
+                    # Load startup/business docs from ./data folder
                     docs = load_documents("./data")  
                     chunks = chunk_documents(docs)
                     vector_store = create_or_load_vectorstore(chunks)
@@ -168,49 +168,49 @@ with st.sidebar:
                     st.session_state.rag_chain = create_rag_chain(st.session_state.retriever)
                     st.session_state.docs_processed = True
 
-                    st.success("Documents processed successfully ✅")
+                    st.success("Documents processed successfully")
                     st.rerun()
                 except Exception as e:
                     st.error(f"Error: {e}")
 
 # --- Main Q&A Area ---
-st.header("💬 Ask Your Startup Questions")
+st.header("Ask Your Startup Questions")
 
 if st.session_state.rag_chain:
-    st.success("🚀 **Ready to Advise!**")
+    st.success("**Ready to Advise!**")
     st.info("Ask me anything about Ethiopian startups, business registration, or entrepreneurship.")
     
     # Common Questions Section
-    st.markdown("### 🔍 **Common Questions You Can Ask:**")
+    st.markdown("### **Common Questions You Can Ask:**")
     col1, col2 = st.columns(2)
     
     with col1:
         st.markdown("""
-        **🏢 Business Registration:**
+        **Business Registration:**
         • How do I register a private limited company?
         • What's the minimum capital requirement?
         • What documents do I need?
-        
-        **📋 Licensing & Permits:**
+
+        **Licensing & Permits:**
         • How do I get a trade license?
         """)
     
     with col2:
         st.markdown("""
-        **🌍 Foreign Investment:**
+        **Foreign Investment:**
         • What are the foreign investment rules?
         • Can foreigners own 100% of a company?
         • What sectors are open to foreigners?
         
-        **💰 Tax & Compliance:**
+        **Tax & Compliance:**
         • What are the tax obligations for startups?
         • When do I need to register for VAT?
         """)
     
-    question = st.text_input("💭 Ask your startup question:", placeholder="e.g., What's the minimum capital for a private limited company?")
+    question = st.text_input("Ask your startup question:", placeholder="e.g., What's the minimum capital for a private limited company?")
     
     if question:
-        with st.spinner("🤔 Searching through official Ethiopian legal documents..."):
+        with st.spinner("Searching through official Ethiopian legal documents..."):
             try:
                 answer = st.session_state.rag_chain.invoke(question)
                 
@@ -218,25 +218,25 @@ if st.session_state.rag_chain:
                 add_to_memory(question, answer)
                 
                 st.markdown("---")
-                st.markdown("### 📋 **Answer:**")
+                st.markdown("### **Answer:**")
                 st.markdown(answer)
                 
                 # Add a helpful tip
-                st.info("💡 **Tip:** Ask follow-up questions about your startup journey in Ethiopia!")
+                st.info(" **Tip:** Ask follow-up questions about your startup journey in Ethiopia!")
                 
             except Exception as e:
-                st.error(f"❌ Error processing your question: {e}")
+                st.error(f"Error processing your question: {e}")
                 st.info("Please try rephrasing your question or check if the knowledge base is properly loaded.")
 
 else:
-    st.warning("⚠️ **Legal Advisor Not Ready**")
+    st.warning(" **Legal Advisor Not Ready**")
     st.info("Please load your Ethiopian legal documents first using the sidebar. Once loaded, I'll be ready to advise you on business registration and compliance.")
     
     # Show what documents are available
     import os
     if os.path.exists("./data") and os.listdir("./data"):
-        st.success(f"📁 Found {len(os.listdir('./data'))} legal document(s) in the data folder")
-        st.info("Click '📚 Process Documents' in the sidebar to get started!")
+        st.success(f"Found {len(os.listdir('./data'))} legal document(s) in the data folder")
+        st.info("Click 'Process Documents' in the sidebar to get started!")
     else:
-        st.error("📁 No legal documents found in the data folder")
+        st.error("No legal documents found in the data folder")
         st.info("Please add Ethiopian legal documents (Commercial Code, Proclamations) to the ./data folder and then process them.")

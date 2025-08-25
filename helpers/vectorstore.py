@@ -22,11 +22,11 @@ def create_or_load_vectorstore(chunks, persist_directory="./startup_db"):
     # First try to load existing vectorstore
     existing = load_vectorstore(persist_directory)
     if existing:
-        print(f"✅ Loaded existing vectorstore from {persist_directory}")
+        print(f"Loaded existing vectorstore from {persist_directory}")
         return existing
     
     # Create new vectorstore if none exists
-    print(f"🆕 Creating new vectorstore in {persist_directory}")
+    print(f"Creating new vectorstore in {persist_directory}")
     embeddings = HuggingFaceEmbeddings(
         model_name="all-MiniLM-L6-v2",
         model_kwargs={'device': 'cpu'} # Use CPU. You can change to 'cuda' if you have a GPU.
@@ -52,7 +52,7 @@ def create_or_load_vectorstore(chunks, persist_directory="./startup_db"):
             'chunk_size': len(chunks[0].page_content) if chunks else 0
         }, f)
     
-    print(f"💾 Vectorstore saved to {save_path}")
+    print(f"Vectorstore saved to {save_path}")
     
     return vectordb
 
@@ -91,10 +91,10 @@ def load_vectorstore(persist_directory="./startup_db"):
         
         # Verify it has documents
         if vectorstore and hasattr(vectorstore, 'index') and vectorstore.index.ntotal > 0:
-            print(f"✅ Loaded FAISS vectorstore with {vectorstore.index.ntotal} vectors")
+            print(f"Loaded FAISS vectorstore with {vectorstore.index.ntotal} vectors")
             return vectorstore
         else:
-            print("❌ Vectorstore has no documents")
+            print("Vectorstore has no documents")
             return None
             
     except Exception as e:
