@@ -10,6 +10,27 @@ from helpers.chain import create_rag_chain
 from helpers.memory import get_memory_from_session, add_to_memory, clear_memory, get_conversation_history, get_memory_summary
 
 
+def format_llm_response(response_text):
+    """
+    Format LLM response text to preserve formatting in Streamlit frontend.
+    Handles line breaks, bullet points, and spacing issues.
+    """
+    if not response_text:
+        return response_text
+    
+    # Replace double line breaks with HTML breaks for better separation
+    formatted = response_text.replace('\n\n', '<br><br>')
+    
+    # Replace single line breaks with HTML breaks
+    formatted = formatted.replace('\n', '<br>')
+    
+    # Ensure bullet points are properly spaced
+    # formatted = formatted.replace('• ', '<br>• ')
+    
+    # Return formatted text without background styling
+    return formatted
+
+
 # Configure Streamlit page
 st.set_page_config(page_title="Ethio Startup Advisor", layout="wide")
 
@@ -219,7 +240,10 @@ if st.session_state.rag_chain:
                 
                 st.markdown("---")
                 st.markdown("### **Answer:**")
-                st.markdown(answer)
+                
+                # Use the formatting function for better display
+                formatted_answer = format_llm_response(answer)
+                st.markdown(formatted_answer, unsafe_allow_html=True)
                 
                 # Add a helpful tip
                 st.info(" **Tip:** Ask follow-up questions about your startup journey in Ethiopia!")
