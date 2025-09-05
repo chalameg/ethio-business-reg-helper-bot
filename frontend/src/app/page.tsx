@@ -121,7 +121,7 @@ export default function Home() {
         await checkStatus() // Refresh status
       }
     } catch (error: any) {
-      setMessage(`❌ Error: ${error.response?.data?.detail || error.message}`)
+      setMessage(`❌ ${error.response?.data?.detail || 'Processing failed'}`)
     } finally {
       setProcessing(false)
     }
@@ -137,7 +137,7 @@ export default function Home() {
         await checkStatus() // Refresh status
       }
     } catch (error: any) {
-      setMessage(`❌ Error: ${error.response?.data?.detail || error.message}`)
+      setMessage(`❌ ${error.response?.data?.detail || 'Reprocessing failed'}`)
     } finally {
       setProcessing(false)
     }
@@ -158,7 +158,7 @@ export default function Home() {
         await loadChatHistory()
       }
     } catch (error: any) {
-      setAnswer(`❌ Error: ${error.response?.data?.detail || error.message}`)
+      setAnswer(`❌ ${error.response?.data?.detail || 'Failed to get answer'}`)
     } finally {
       setLoading(false)
     }

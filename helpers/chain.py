@@ -30,7 +30,7 @@ def create_rag_chain(retriever: ContextualCompressionRetriever):
     # 1. Initialize Groq LLM (Llama-3 is super fast here)
     llm = ChatGroq(
         temperature=0,   # deterministic answers
-        model_name="llama3-8b-8192"  # Groq's recommended fast model
+        model_name="llama-3.1-8b-instant"  # Groq's current fast model
     )
 
     # 2. Define the enhanced system prompt

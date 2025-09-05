@@ -107,7 +107,7 @@ async def process_documents():
         import traceback
         print(f"Error processing documents: {str(e)}")
         print(f"Traceback: {traceback.format_exc()}")
-        raise HTTPException(status_code=500, detail=f"Error processing documents: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to process documents. Please try again.")
 
 @app.post("/ask-question", response_model=AnswerResponse)
 async def ask_question(request: QuestionRequest):
@@ -115,7 +115,7 @@ async def ask_question(request: QuestionRequest):
     global rag_chain, memory, docs_processed, chat_history
     
     if not docs_processed or not rag_chain:
-        raise HTTPException(status_code=400, detail="Documents not processed yet. Please process documents first.")
+        raise HTTPException(status_code=400, detail="Please process documents first.")
     
     try:
         # Get answer from RAG chain
@@ -145,7 +145,7 @@ async def ask_question(request: QuestionRequest):
         import traceback
         print(f"Error processing question: {str(e)}")
         print(f"Traceback: {traceback.format_exc()}")
-        raise HTTPException(status_code=500, detail=f"Error processing question: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to process question. Please try again.")
 
 @app.get("/chat-history")
 async def get_chat_history():
