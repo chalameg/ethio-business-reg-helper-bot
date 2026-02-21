@@ -4,7 +4,11 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_core.output_parsers import StrOutputParser
 from langchain_groq import ChatGroq
-from langchain.retrievers import ContextualCompressionRetriever
+
+try:
+    from langchain.retrievers import ContextualCompressionRetriever
+except ModuleNotFoundError:
+    from langchain_community.retrievers import ContextualCompressionRetriever
 
 
 def _format_docs(docs: list) -> str:

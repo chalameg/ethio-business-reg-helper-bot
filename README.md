@@ -32,7 +32,7 @@ This project now supports **two different architectures**:
 | **Customization** | 🟡 Limited | 🟢 Unlimited |
 
 ## 🚀 **Quick Start - Choose Your Path**
-
+<!-- conda activate youtube-rag -->
 ### **Path A: Streamlit (Recommended for Quick Start)**
 ```bash
 # Install dependencies
