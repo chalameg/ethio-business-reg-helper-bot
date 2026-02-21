@@ -1,13 +1,17 @@
-# Support both langchain (local) and langchain_community (e.g. Streamlit Cloud)
+# Support langchain (local), langchain_classic (Streamlit Cloud), or langchain_community
 try:
     from langchain.retrievers import ContextualCompressionRetriever
     from langchain.retrievers.document_compressors import CrossEncoderReranker
 except ModuleNotFoundError:
-    from langchain_community.retrievers import ContextualCompressionRetriever
     try:
-        from langchain_community.retrievers.document_compressors import CrossEncoderReranker
-    except (ModuleNotFoundError, AttributeError):
-        from langchain_community.document_compressors import CrossEncoderReranker
+        from langchain_classic.retrievers import ContextualCompressionRetriever
+        from langchain_classic.retrievers.document_compressors import CrossEncoderReranker
+    except (ModuleNotFoundError, ImportError):
+        from langchain_community.retrievers import ContextualCompressionRetriever
+        try:
+            from langchain_community.retrievers.document_compressors import CrossEncoderReranker
+        except (ModuleNotFoundError, AttributeError):
+            from langchain_community.document_compressors import CrossEncoderReranker
 
 from langchain_community.cross_encoders import HuggingFaceCrossEncoder
 from langchain_community.vectorstores import FAISS

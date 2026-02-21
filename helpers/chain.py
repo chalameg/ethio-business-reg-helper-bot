@@ -8,7 +8,10 @@ from langchain_groq import ChatGroq
 try:
     from langchain.retrievers import ContextualCompressionRetriever
 except ModuleNotFoundError:
-    from langchain_community.retrievers import ContextualCompressionRetriever
+    try:
+        from langchain_classic.retrievers import ContextualCompressionRetriever
+    except (ModuleNotFoundError, ImportError):
+        from langchain_community.retrievers import ContextualCompressionRetriever
 
 
 def _format_docs(docs: list) -> str:
