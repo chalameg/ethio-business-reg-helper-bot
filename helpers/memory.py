@@ -5,7 +5,11 @@ try:
 except ModuleNotFoundError:
     from langchain_classic.memory import ConversationBufferWindowMemory
 
-from langchain_core.memory import BaseMemory
+try:
+    from langchain_core.memory import BaseMemory
+except ModuleNotFoundError:
+    from langchain_classic.memory import BaseMemory
+
 import streamlit as st
 
 
