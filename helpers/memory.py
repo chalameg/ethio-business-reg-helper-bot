@@ -1,98 +1,79 @@
-# helpers/memory.py
-
-try:
-    from langchain.memory import ConversationBufferWindowMemory
-except ModuleNotFoundError:
-    from langchain_classic.memory import ConversationBufferWindowMemory
-
-try:
-    from langchain_core.memory import BaseMemory
-except ModuleNotFoundError:
-    from langchain_classic.memory import BaseMemory
-
+"""
+Session-based conversation memory. No LangChain memory dependency; works on all environments.
+"""
+from typing import List, Any
 import streamlit as st
 
+# Message-like object for sidebar compatibility (.content, .type)
+class _Message:
+    def __init__(self, content: str, type: str):
+        self.content = content
+        self.type = type  # "human" or "ai"
 
-def create_conversation_memory(k: int = 5) -> BaseMemory:
-    """
-    Creates a conversation memory component that remembers the last k exchanges.
-    
-    Args:
-        k (int): Number of conversation turns to remember (default: 5)
-    
-    Returns:
-        BaseMemory: Conversation memory component
-    """
-    return ConversationBufferWindowMemory(
-        k=k,
-        return_messages=True,
-        memory_key="chat_history"
-    )
+_SESSION_KEY = "chat_history"
+_MEMORY_KEY = "conversation_memory"
+_DEFAULT_K = 5
 
 
-def get_memory_from_session() -> BaseMemory:
+def _ensure_chat_history():
+    if _SESSION_KEY not in st.session_state:
+        st.session_state[_SESSION_KEY] = []
+
+
+def create_conversation_memory(k: int = _DEFAULT_K) -> Any:
     """
-    Gets or creates conversation memory from Streamlit session state.
-    
-    Returns:
-        BaseMemory: Conversation memory component
+    Creates a conversation memory component (session-based). Remembers last k exchanges.
+    Returns a thin wrapper for compatibility with existing code.
     """
-    if "conversation_memory" not in st.session_state:
-        st.session_state.conversation_memory = create_conversation_memory()
-    
-    return st.session_state.conversation_memory
+    _ensure_chat_history()
+    # Store k in session for the wrapper
+    if "chat_memory_k" not in st.session_state:
+        st.session_state["chat_memory_k"] = k
+    return _SessionMemoryWrapper()
+
+
+class _SessionMemoryWrapper:
+    """Wrapper that provides save_context and chat_memory.messages using session state."""
+
+    @property
+    def chat_memory(self):
+        _ensure_chat_history()
+        k = st.session_state.get("chat_memory_k", _DEFAULT_K)
+        messages = st.session_state[_SESSION_KEY][-(2 * k):]
+        return type("ChatMemory", (), {"messages": messages})()
+
+
+def get_memory_from_session() -> _SessionMemoryWrapper:
+    """Gets or creates conversation memory from Streamlit session state."""
+    _ensure_chat_history()
+    if _MEMORY_KEY not in st.session_state:
+        st.session_state[_MEMORY_KEY] = _SessionMemoryWrapper()
+    return st.session_state[_MEMORY_KEY]
 
 
 def add_to_memory(question: str, answer: str):
-    """
-    Adds a question-answer pair to the conversation memory.
-    
-    Args:
-        question (str): User's question
-        answer (str): AI's answer
-    """
-    memory = get_memory_from_session()
-    if memory and hasattr(memory, 'save_context'):
-        try:
-            memory.save_context(
-                {"input": question},
-                {"output": answer}
-            )
-        except Exception as e:
-            # If memory fails, just continue without it
-            pass
+    """Adds a question-answer pair to the conversation memory."""
+    _ensure_chat_history()
+    st.session_state[_SESSION_KEY].append(_Message(question, "human"))
+    st.session_state[_SESSION_KEY].append(_Message(answer, "ai"))
+    k = st.session_state.get("chat_memory_k", _DEFAULT_K)
+    st.session_state[_SESSION_KEY] = st.session_state[_SESSION_KEY][-(2 * k):]
 
 
 def clear_memory():
-    """
-    Clears the conversation memory.
-    """
-    if "conversation_memory" in st.session_state:
-        del st.session_state.conversation_memory
-    st.session_state.conversation_memory = create_conversation_memory()
+    """Clears the conversation memory."""
+    st.session_state[_SESSION_KEY] = []
+    st.session_state[_MEMORY_KEY] = _SessionMemoryWrapper()
 
 
-def get_conversation_history() -> list:
-    """
-    Gets the current conversation history.
-    
-    Returns:
-        list: List of conversation messages
-    """
-    memory = get_memory_from_session()
-    if memory and hasattr(memory, 'chat_memory') and memory.chat_memory:
-        return memory.chat_memory.messages
-    return []
+def get_conversation_history() -> List[_Message]:
+    """Returns the current conversation history (message-like objects with .content and .type)."""
+    _ensure_chat_history()
+    return st.session_state[_SESSION_KEY]
 
 
 def get_memory_summary() -> str:
-    """
-    Gets a summary of the conversation memory.
-    
-    Returns:
-        str: Summary of conversation
-    """
-    memory = get_memory_from_session()
-    if memory and hasattr(memory, 'chat_memory') and memory.chat_memory and memory.chat_memory.messages:
-        return f"Memory contains {len(memory.chat_memory.messages)} messages"
-    return "No conversation history"
+    """Returns a short summary of the conversation memory."""
+    _ensure_chat_history()
+    n = len(st.session_state[_SESSION_KEY])
+    return f"Memory contains {n} messages" if n else "No conversation history"
