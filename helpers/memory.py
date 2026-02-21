@@ -1,6 +1,10 @@
 # helpers/memory.py
 
-from langchain.memory import ConversationBufferWindowMemory
+try:
+    from langchain.memory import ConversationBufferWindowMemory
+except ModuleNotFoundError:
+    from langchain_classic.memory import ConversationBufferWindowMemory
+
 from langchain_core.memory import BaseMemory
 import streamlit as st
 
